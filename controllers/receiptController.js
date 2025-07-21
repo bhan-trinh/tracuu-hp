@@ -1,5 +1,19 @@
+// (Receipts) Logic for request/response
 
-app.get("/getBill", async (req, res) => {
+const {SHA256} = require('../utils/SHA256')
+const {padDate} = require('../utils/padDate')
+const receiptModel = require('../models/receiptModel')
+
+// receipt/readReceipt/:id
+exports.readReceiptById = async (req, res) => {
+  const { id } = req.params
+  const receipt = await receiptModel.findReceiptById(id)
+  console.log(receipt)
+  res.json(receipt)
+}
+
+// receipt/lookUpReceipt
+exports.lookUpReceiptVNPT = async (req, res) => {
   // Create transaction time
   const curTime = new Date();
   const datetime = `${curTime.getFullYear()}${padDate(curTime.getMonth() + 1)}${padDate(curTime.getDay())}${padDate(curTime.getHours())}${padDate(curTime.getMinutes())}${padDate(curTime.getSeconds())}`;
@@ -25,7 +39,7 @@ app.get("/getBill", async (req, res) => {
   );
 
   // Encode them and use as secure code
-  var secureCode = hash(tapedValues);
+  var secureCode = SHA256(tapedValues);
   body.SECURE_CODE = secureCode;
 
   const response = await fetch(
@@ -44,36 +58,8 @@ app.get("/getBill", async (req, res) => {
   }
 
   const json = await response.json();
-  console.log(json);
-  res.send(json)
-});
+  console.log(json)
+  if (json.RESPONSE_CODE === '00') res.send(json)
+    else throw new Error(`Error from VNPT Money API: Response code: ${json.RESPONSE_CODE}`)
+};
 
-function hash(string) {
-  return createHash("sha256").update(string).digest("hex");
-}
-
-function padDate(number) {
-  return number.toString().padStart(2, "0")
-}
-
-
-// TEST ROUTES =================================
-app.get("/student", (req, res) => {
-  res.status(200).send({
-    studentName: "Thanh",
-    studentCode: "894138218",
-  });
-});
-
-app.post("/student/:id", (req, res) => {
-  const { id } = req.params;
-  const { studentClass } = req.body;
-
-  if (!studentClass) {
-    res.status(418).send({ message: "we need a logo!" });
-  }
-
-  const student = res.send({
-    studentName: `Thanh in class ${studentClass} and id ${id}`,
-  });
-});

@@ -1,3 +1,5 @@
+const { createHash } = require('crypto')
+
 // Hash a string with SHA-256
 module.exports = {
   SHA256: (string) => {
