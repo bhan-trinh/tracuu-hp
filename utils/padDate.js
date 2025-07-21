@@ -1,4 +1,6 @@
 // Pad a string with leading zeroes
-function padDate(number) {
-  return number.toString().padStart(2, "0")
-}
+module.exports = {
+  padDate: (number) => {
+    return number.toString().padStart(2, "0");
+  },
+};
