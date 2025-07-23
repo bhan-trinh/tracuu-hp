@@ -15,9 +15,8 @@ const pool = oracledb.createPool({
 exports.getConnection = async () => {
     if (!oracledb.getPool()) await pool;
     const db = await oracledb.getConnection();
-    const dbInfo = await db.execute(
-        `SELECT
-            * FROM MN02_RECEIPT`)
-    console.log(`DB INFO: ${dbInfo.rows}`)
+    // const dbInfo = await db.execute(
+    //     `SELECT user FROM dual`)
+    // console.log(`DB INFO: ${dbInfo.rows}`)
     return db
 }

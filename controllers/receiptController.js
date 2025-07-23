@@ -3,6 +3,19 @@
 const {SHA256} = require('../utils/SHA256')
 const {padDate} = require('../utils/padDate')
 const receiptModel = require('../models/receiptModel')
+const studentModel = require('../models/studentModel')
+const billModel = require('../models/billModel')
+
+exports.readFullReceiptById = async (req, res) => {
+  const { id } = req.params
+  const receipt = await receiptModel.findReceiptById(id)
+  const student = await studentModel.findStudentByReceiptId(id)
+  const bills = await billModel.findBillsByReceiptId(id)
+  receipt["hoc_sinh_info"] = student
+  receipt["thanh_toan"] = bills
+  console.log(receipt)
+  res.json(receipt)
+}
 
 // receipt/readReceipt/:id
 exports.readReceiptById = async (req, res) => {
@@ -58,7 +71,6 @@ exports.lookUpReceiptVNPT = async (req, res) => {
   }
 
   const json = await response.json();
-  console.log(json)
   if (json.RESPONSE_CODE === '00') res.send(json)
     else throw new Error(`Error from VNPT Money API: Response code: ${json.RESPONSE_CODE}`)
 };

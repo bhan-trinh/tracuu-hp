@@ -6,5 +6,7 @@ const receiptController = require("../controllers/receiptController");
 
 router.get("/lookUpReceipt", receiptController.lookUpReceiptVNPT);
 router.get("/:id", receiptController.readReceiptById)
+router.get("/full/:id", receiptController.readFullReceiptById)
+
 
 module.exports = router;
