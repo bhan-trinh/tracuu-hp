@@ -2,9 +2,9 @@
 
 const express = require("express");
 const router = express.Router();
-const receiptController = require("../controllers/studentController");
+const studentController = require("../controllers/studentController");
 
-router.get("/:id", receiptController.readStudentById)
-router.get("/receipt/:receiptId", receiptController.readStudentByReceiptId)
+router.get("/:id", studentController.readStudentById)
+router.get("/receipt/:receiptId", studentController.readStudentByReceiptId)
 
 module.exports = router;
