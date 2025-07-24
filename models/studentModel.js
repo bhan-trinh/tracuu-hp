@@ -25,10 +25,8 @@ exports.findStudentByReceiptId = async (receiptId) => {
   const res = await con.execute(`SELECT * FROM MN02_RECEIPT WHERE ID = :receiptId`, [
     receiptId,
   ],
-
     { outFormat: oracledb.OUT_FORMAT_OBJECT });
   await con.close();
-  console.log('receiptId:')
   const studentId = res.rows[0]["STUDENT_ID"]
   const student = await this.findStudentById(studentId);
   return student;

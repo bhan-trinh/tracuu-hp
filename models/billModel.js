@@ -39,13 +39,13 @@ exports.findBillDetailsbyBillId = async (billId) => {
     const con = await db.getConnection()
     const res = await con.execute(
         `SELECT
-        ID as "id",
-NAME as "ten",
-AMOUNT as "tong_tien",
-CODE as "code",
-BIC as "code_thu_huong"
-FROM MN02_BILL_DETAIL
-WHERE BILL_ID = :id
+            ID as "id",
+            NAME as "ten",
+            AMOUNT as "tong_tien",
+            CODE as "code",
+            BIC as "code_thu_huong"
+            FROM MN02_BILL_DETAIL
+        WHERE BILL_ID = :id
         `, [billId], {outFormat: oracledb.OUT_FORMAT_OBJECT}
     )
     await con.close()
