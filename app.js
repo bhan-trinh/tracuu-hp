@@ -5,15 +5,16 @@ const receiptRoutes = require('./routes/receipt/receiptRoutes')
 const studentRoutes = require('./routes/student/studentRoutes')
 const vnptApiRoutes = require('./routes/vnpt/vnptApiRoutes');
 const { myRequestHeaders, validateRequest } = require("./middlewares/validators");
+const { authenticateRequest } = require("./middlewares/authenticators");
+const publicRoutes = require('./routes/public/publicRoutes')
 
 const domain = '/api-hp/v1'
 
 app.use(express.json());
 
-app.use(myRequestHeaders, validateRequest, async(req, res) => {
-    const token = req.headers.authorization.split(" ")[1]
-    // check against database
-})
+app.use(domain, publicRoutes)
+
+app.use(myRequestHeaders, validateRequest, authenticateRequest)
 
 app.use(`${domain}/receipt`, receiptRoutes)
 app.use(`${domain}/student`, studentRoutes)

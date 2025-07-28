@@ -1,6 +1,7 @@
 const { header, validationResult } = require ('express-validator');
+const publicPaths = require('../routes/public/routes')
 
-export const myRequestHeaders = [
+exports.myRequestHeaders = [
   header('authorization')
     .exists({ checkFalsy: true })
     .withMessage("Missing Authorization Header") // you can specify the message to show if a validation has failed
@@ -10,7 +11,10 @@ export const myRequestHeaders = [
     .withMessage("Authorization Token is not Bearer")
 ];
 
-export function validateRequest(req, res, next) {
+exports.validateRequest = (req, res, next) => {
+  if (publicPaths.paths.includes(req.path)) {
+      next(); // Skip auth
+  }
   const validationErrors = validationResult(req);
   const errorMessages = [];
 
@@ -19,7 +23,7 @@ export function validateRequest(req, res, next) {
   }
 
   if (!validationErrors.isEmpty()) {
-    return res.status(403).json({ "errors": errorMessages });
+    return res.status(403).json({"errors": errorMessages });
   }
   next();
 }

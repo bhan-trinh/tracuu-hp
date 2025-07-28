@@ -6,7 +6,7 @@ Prefix each route with `/api-hp/v1`
 
 Open endpoints require no Authentication.
 
-* [Login](login.md) : `POST /api/login/`
+* [Login](login.md) : `POST /login`
 
 ## Endpoints that require Authentication
 
