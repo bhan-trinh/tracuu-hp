@@ -29,6 +29,7 @@ exports.findUserId = async (username) => {
     {outFormat: oracledb.OUT_FORMAT_OBJECT}
   ) 
     const userId = res.rows[0]['userId']
+    await con.close()
     return userId
 };
 
