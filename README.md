@@ -1,6 +1,6 @@
 # Tuition Service Payment API
 
-Prefix each route with http://tracuu-hp
+Prefix each route with `/api-hp/v1`
 
 ## Open Endpoints
 

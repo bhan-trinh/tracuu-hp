@@ -34,7 +34,7 @@ exports.findFullReceiptById = async (id) => {
   return receipt
 }
 
-exports.findReceiptByBillId = async (billId) => {
+exports.findReceiptIdByBillId = async (billId) => {
   const con = await db.getConnection();
   const res = await con.execute(
     `SELECT
@@ -49,7 +49,7 @@ exports.findReceiptByBillId = async (billId) => {
 
   if (receiptId === undefined || receiptId === null) throw ("Error: Cannot find receipt")
   // Return receipt as a JSON
-  return await this.findFullReceiptById(receiptId)
+  return receiptId
 
 }
 

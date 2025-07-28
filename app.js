@@ -6,7 +6,7 @@ const studentRoutes = require('./routes/student/studentRoutes')
 const vnptApiRoutes = require('./routes/vnpt/vnptApiRoutes');
 const { myRequestHeaders, validateRequest } = require("./middlewares/validators");
 
-const domain = '/tracuu-hp'
+const domain = '/api-hp/v1'
 
 app.use(express.json());
 
@@ -17,6 +17,6 @@ app.use(myRequestHeaders, validateRequest, async(req, res) => {
 
 app.use(`${domain}/receipt`, receiptRoutes)
 app.use(`${domain}/student`, studentRoutes)
-app.use(`${domain}/vnptApi`, vnptApiRoutes)
+app.use(`${domain}/vnpt`, vnptApiRoutes)
 
 module.exports = app;
