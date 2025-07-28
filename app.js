@@ -1,9 +1,9 @@
 const express = require("express");
 const http = require("http");
 const app = express();
-const receiptRoutes = require('./routes/receiptRoutes')
-const studentRoutes = require('./routes/studentRoutes')
-const vnptApiRoutes = require('./routes/vnptApiRoutes');
+const receiptRoutes = require('./routes/receipt/receiptRoutes')
+const studentRoutes = require('./routes/student/studentRoutes')
+const vnptApiRoutes = require('./routes/vnpt/vnptApiRoutes');
 const { myRequestHeaders, validateRequest } = require("./middlewares/validators");
 
 const domain = '/tracuu-hp'
