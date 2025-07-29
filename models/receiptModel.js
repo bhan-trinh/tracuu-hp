@@ -53,6 +53,25 @@ exports.findReceiptIdByBillId = async (billId) => {
 
 }
 
+exports.findFullReceiptsByUserId = async (userId) => {
+  const con = await db.getConnection()
+  const allReceiptsId = await con.execute(
+    `SELECT RECEIPT_ID AS "receiptId"
+    FROM MN02_USER_RECEIPT
+    WHERE USER_ID = :userId`,
+    [userId],
+    {outFormat: oracledb.outFormat}
+  )
+  await con.close()
+  var allReceipts = []
+  for (var receipt of allReceiptsId.rows){
+    var receiptId = receipt[0]
+    var receipt = await this.findFullReceiptById(receiptId)
+    allReceipts.push(receipt)
+  }
+  return allReceipts
+}
+
 exports.writeFullReceipt = async (receipt) => {
   const con = await db.getConnection();
   const student = receipt.hoc_sinh_info;
