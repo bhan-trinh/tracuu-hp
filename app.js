@@ -20,4 +20,5 @@ app.use(`${domain}/receipt`, receiptRoutes)
 app.use(`${domain}/student`, studentRoutes)
 app.use(`${domain}/vnpt`, vnptApiRoutes)
 
+
 module.exports = app;
