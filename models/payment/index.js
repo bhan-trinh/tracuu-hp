@@ -19,9 +19,10 @@ exports.moveToPaidReceipt = async (receiptId, userId) => {
     await con.execute(
       `
     UPDATE MN02_PAID_RECEIPT
-    SET PAYMENT_TIME = CURRENT_TIMESTAMP
-    SET PAYER_USER_ID = :userId`,
-      [userId],
+    SET PAYMENT_TIME = CURRENT_TIMESTAMP,
+    PAYER_USER_ID = :userId
+    WHERE ID = :id`,
+      [userId, receiptId],
       { autoCommit: true }
     );
 
@@ -44,7 +45,7 @@ exports.moveToPaidReceipt = async (receiptId, userId) => {
     
   } catch (err) {
     await con.close();
-    return err;
+    console.log (`Move paid to receipt failed: ${err}`);
   }
   await con.close();
 };
