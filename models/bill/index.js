@@ -1,4 +1,4 @@
-const db = require('../config/db')
+const db = require('../../config/db')
 const oracledb = require('oracledb')
 
 exports.findBillById = async (id) => {

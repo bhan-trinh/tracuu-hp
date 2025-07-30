@@ -1,4 +1,4 @@
-const db = require("../config/db");
+const db = require("../../config/db");
 const oracledb = require("oracledb");
 
 exports.findStudentById = async (id) => {
@@ -22,12 +22,14 @@ exports.findStudentById = async (id) => {
 
 exports.findStudentByReceiptId = async (receiptId) => {
   const con = await db.getConnection();
-  const res = await con.execute(`SELECT * FROM MN02_RECEIPT WHERE ID = :receiptId`, [
+  const res = await con.execute(`SELECT
+    STUDENT_ID as "studentId"
+    FROM MN02_RECEIPT WHERE ID = :receiptId`, [
     receiptId,
   ],
     { outFormat: oracledb.OUT_FORMAT_OBJECT });
   await con.close();
-  const studentId = res.rows[0]["STUDENT_ID"]
+  const studentId = res.rows[0]["studentId"]
   const student = await this.findStudentById(studentId);
   return student;
 };

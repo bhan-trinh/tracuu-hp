@@ -1,8 +1,8 @@
-const db = require("../config/db");
+const db = require("../../config/db");
 const oracledb = require("oracledb");
 const { randomBytes, hash } = require("crypto");
-const { SHA256 } = require("../utils/SHA256");
-const { hashPassWord, checkPassword } = require("../utils/auth");
+const { SHA256 } = require("../../utils/SHA256");
+const { hashPassWord, checkPassword } = require("../../utils/auth");
 
 exports.mapReceiptToUser = async (userId, receiptId) => {
   const con = await db.getConnection();

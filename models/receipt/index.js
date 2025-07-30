@@ -3,8 +3,8 @@ const { SHA256 } = require("../../utils/SHA256");
 const { padDate } = require("../../utils/padDate");
 const db = require("../../config/db");
 const oracledb = require("oracledb");
-const studentModel = require('../studentModel')
-const billModel = require('./billModel')
+const studentModel = require("../student");
+const billModel = require("../bill");
 
 exports.findReceiptById = async (id) => {
   const con = await db.getConnection();
@@ -24,15 +24,19 @@ exports.findReceiptById = async (id) => {
 };
 
 exports.findFullReceiptById = async (id) => {
-  const receipt = await this.findReceiptById(id)
-  const student = await studentModel.findStudentByReceiptId(id)
-  const bills = await billModel.findBillsByReceiptId(id)
-  receipt["hoc_sinh_info"] = student
-  receipt["thanh_toan"] = bills
+  const receipt = await this.findReceiptById(id);
+  if (!receipt) {
+    console.log("FindFullReceiptById: No Receipt with that ID found.")
+    return
+  }
+  const student = await studentModel.findStudentByReceiptId(id);
+  const bills = await billModel.findBillsByReceiptId(id);
+  receipt["hoc_sinh_info"] = student;
+  receipt["thanh_toan"] = bills;
 
   // Return receipt as a JSON
-  return receipt
-}
+  return receipt;
+};
 
 exports.findReceiptIdByBillId = async (billId) => {
   const con = await db.getConnection();
@@ -41,36 +45,61 @@ exports.findReceiptIdByBillId = async (billId) => {
       RECEIPT_ID as "receiptId"
       FROM MN02_BILL
     WHERE ID = :billId
-    `, [billId], {outFormat: oracledb.OUT_FORMAT_OBJECT}
-  )
-  await con.close()
-  console.log(res.rows)
-  const receiptId = res.rows[0]['receiptId']
+    `,
+    [billId],
+    { outFormat: oracledb.OUT_FORMAT_OBJECT }
+  );
+  await con.close();
+  console.log(res.rows);
+  const receiptId = res.rows[0]["receiptId"];
 
-  if (receiptId === undefined || receiptId === null) throw ("Error: Cannot find receipt")
+  if (receiptId === undefined || receiptId === null)
+    throw "Error: Cannot find receipt";
   // Return receipt as a JSON
-  return receiptId
-
-}
+  return receiptId;
+};
 
 exports.findFullReceiptsByUserId = async (userId) => {
-  const con = await db.getConnection()
+  const con = await db.getConnection();
   const allReceiptsId = await con.execute(
     `SELECT RECEIPT_ID AS "receiptId"
     FROM MN02_USER_RECEIPT
     WHERE USER_ID = :userId`,
     [userId],
-    {outFormat: oracledb.outFormat}
-  )
-  await con.close()
-  var allReceipts = []
-  for (var receipt of allReceiptsId.rows){
-    var receiptId = receipt[0]
-    var receipt = await this.findFullReceiptById(receiptId)
-    allReceipts.push(receipt)
+    { outFormat: oracledb.outFormat }
+  );
+  await con.close();
+  var allReceipts = [];
+  for (var receipt of allReceiptsId.rows) {
+    var receiptId = receipt[0];
+    var receipt = await this.findFullReceiptById(receiptId);
+    allReceipts.push(receipt);
   }
-  return allReceipts
-}
+  return allReceipts;
+};
+
+exports.findPaidReceiptsByUserId = async (userId) => {
+  const con = await db.getConnection();
+  const res = await con.execute(
+    `SELECT 
+      MN02_PAID_RECEIPT.ID AS "id",
+      SERVICE as "dich_vu",
+      DESCRIPTION as "ten_thanh_toan",
+      TO_CHAR(PAYMENT_TIME, 'DD/MM/YYYY HH24:MI:SS') as "thoi_gian_giao_dich", 
+      AMOUNT as "tong_tien"
+      FROM MN02_PAID_RECEIPT
+      INNER JOIN MN02_BILL ON MN02_PAID_RECEIPT.ID = MN02_BILL.RECEIPT_ID
+      WHERE PAYER_USER_ID = :userId`,
+    [userId],
+    { outFormat: oracledb.OUT_FORMAT_OBJECT }
+  );
+  await con.close();
+  const allReceipts = res.rows
+  console.log(`All receipts returned from findPaidReceiptsByUserId with user ID = ${userId}`)
+  console.log(allReceipts)
+  return allReceipts;
+};
+
 
 exports.writeFullReceipt = async (receipt) => {
   const con = await db.getConnection();
@@ -111,7 +140,7 @@ exports.writeFullReceipt = async (receipt) => {
     classId: student.lop_hoc_id,
     schoolId: student.truong_id,
     provinceId: student.tinh_id,
-    service: 'VnEdu',
+    service: "VnEdu",
     receiptId: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
   });
 
@@ -129,7 +158,7 @@ exports.writeFullReceipt = async (receipt) => {
   USE_SERVICE_ID,
   SOURCE,
   DEBT_SERVICE_ID) VALUES (:id, :amount, :description, :name, :receiptId, :allowOnl, :useServId, :src, :debtServId)
-  `
+  `;
 
   const billDetailQuery = `INSERT INTO MN02_BILL_DETAIL(
       BILL_ID,
@@ -137,7 +166,7 @@ exports.writeFullReceipt = async (receipt) => {
       AMOUNT,
       CODE,
       BIC)
-      VALUES (:billId, :name, :amount, :code, :bic)`
+      VALUES (:billId, :name, :amount, :code, :bic)`;
 
   for (var bill of bills) {
     await con.execute(
@@ -171,58 +200,6 @@ exports.writeFullReceipt = async (receipt) => {
       );
     }
   }
-  await con.close()
+  await con.close();
 };
 
-
-exports.findReceiptVNPT = async (req, res) => {
-  // Create transaction time
-  const curTime = new Date();
-  const datetime = `${curTime.getFullYear()}${padDate(
-    curTime.getMonth() + 1
-  )}${padDate(curTime.getDay())}${padDate(curTime.getHours())}${padDate(
-    curTime.getMinutes()
-  )}${padDate(curTime.getSeconds())}`;
-
-  // Create transaction id
-  var id = Date.now() + Math.floor(Math.random() * 100);
-
-  // Tape the values together
-  var body = {
-    ACTION: process.env.ACTION,
-    VERSION: process.env.VERSION,
-    PARTNER_ID: process.env.PARTNER_ID,
-    SERVICE_ID: process.env.SERVICE_ID,
-    SERVICE_PROVIDER_ID: process.env.SERVICE_PROVIDER_ID,
-    CHANNEL_ID: process.env.CHANNEL_ID,
-    PAYMENT_CODE: process.env.PAYMENT_CODE,
-    TRANS_DATE_TIME: datetime,
-    TRANS_REQUEST_ID: id.toString(),
-    ADDITION_INFO: process.env.ADDITION_INFO,
-  };
-  var tapedValues = [...Object.values(body), [process.env.PRIVATE_KEY]].join(
-    "|"
-  );
-
-  // Encode them and use as secure code
-  var secureCode = SHA256(tapedValues);
-  body.SECURE_CODE = secureCode;
-
-  const response = await fetch(
-    "https://sandboxpay.vnptmedia.vn/rest/collection/v2.0.0/get_bill",
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.API_KEY}`,
-      },
-      body: JSON.stringify(body),
-    }
-  );
-
-  if (!response.ok) {
-    throw new Error(`Response status: ${response.status}`);
-  }
-
-  const json = await response.json();
-  return json
-};
