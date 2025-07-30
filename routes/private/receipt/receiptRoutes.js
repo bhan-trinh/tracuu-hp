@@ -2,7 +2,7 @@
 
 const express = require("express");
 const router = express.Router();
-const receiptController = require("../../controllers/receiptController");
+const receiptController = require("../../../controllers/receipt");
 const ROUTE = require('./routes') 
 
 router.get(ROUTE.GET_RECEIPT_BY_ID, receiptController.readFullReceiptById)

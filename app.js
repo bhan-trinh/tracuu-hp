@@ -1,9 +1,9 @@
 const express = require("express");
 const http = require("http");
 const app = express();
-const receiptRoutes = require('./routes/receipt/receiptRoutes')
-const studentRoutes = require('./routes/student/studentRoutes')
-const vnptApiRoutes = require('./routes/vnpt/vnptApiRoutes');
+const receiptRoutes = require('./routes/private/receipt/receiptRoutes')
+const studentRoutes = require('./routes/private/student/studentRoutes')
+const vnptApiRoutes = require('./routes/private/vnpt/vnptApiRoutes');
 const { myRequestHeaders, validateRequest } = require("./middlewares/validators");
 const { authenticateRequest } = require("./middlewares/authenticators");
 const publicRoutes = require('./routes/public/publicRoutes')

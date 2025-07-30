@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { checkPassword, findUserId, checkUser, createUser } = require('../models/userModel');
+const { checkPassword, findUserId, checkUser, createUser } = require('../../models/userModel');
 
 // Return a JWT
 exports.login = async (req, res) => {

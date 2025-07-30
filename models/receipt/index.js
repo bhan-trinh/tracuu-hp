@@ -1,9 +1,9 @@
 // (Receipts) Handles DB queries
-const { SHA256 } = require("../utils/SHA256");
-const { padDate } = require("../utils/padDate");
-const db = require("../config/db");
+const { SHA256 } = require("../../utils/SHA256");
+const { padDate } = require("../../utils/padDate");
+const db = require("../../config/db");
 const oracledb = require("oracledb");
-const studentModel = require('./studentModel')
+const studentModel = require('../studentModel')
 const billModel = require('./billModel')
 
 exports.findReceiptById = async (id) => {

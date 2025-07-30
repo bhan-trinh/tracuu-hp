@@ -1,7 +1,7 @@
 // (Receipts) Logic for request/response
 
-const receiptModel = require('../models/receiptModel')
-const userModel = require('../models/userModel')
+const receiptModel = require('../../models/receipt')
+const userModel = require('../../models/userModel')
 
 // Test route
 exports.readReceiptById = async (req, res) => {
