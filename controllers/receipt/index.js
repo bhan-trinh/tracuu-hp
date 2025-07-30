@@ -45,14 +45,12 @@ exports.readFullReceiptByBillId = async (req, res) => {
 // receipt/user/getAll
 exports.readFullReceiptsByUserId = async (req, res) => {
   const userId = req.user.userId
-  console.log(userId)
   const allReceipts = await receiptModel.findFullReceiptsByUserId(userId)
   res.json(allReceipts)
 }
 
 exports.readPaidReceiptsByUserId = async (req, res) => {
   const userId = req.user.userId
-  console.log(userId)
   const allReceipts = await receiptModel.findPaidReceiptsByUserId(userId)
   res.json(allReceipts)
 }

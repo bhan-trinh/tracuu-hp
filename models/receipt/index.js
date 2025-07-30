@@ -95,8 +95,8 @@ exports.findPaidReceiptsByUserId = async (userId) => {
   );
   await con.close();
   const allReceipts = res.rows
-  console.log(`All receipts returned from findPaidReceiptsByUserId with user ID = ${userId}`)
-  console.log(allReceipts)
+  // console.log(`All receipts returned from findPaidReceiptsByUserId with user ID = ${userId}`)
+  // console.log(allReceipts)
   return allReceipts;
 };
 

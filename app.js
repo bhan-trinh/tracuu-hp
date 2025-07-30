@@ -22,5 +22,4 @@ app.use(`${domain}/student`, studentRoutes)
 app.use(`${domain}/vnpt`, vnptApiRoutes)
 app.use(`${domain}/payment`, paymentRoutes)
 
-
 module.exports = app;

@@ -6,7 +6,7 @@ const { hashPassWord, checkPassword } = require("../../utils/auth");
 
 exports.mapReceiptToUser = async (userId, receiptId) => {
   const con = await db.getConnection();
-  const query = `INSERT INTO MN02_USER_RECEIPT (USER_ID, RECEIPT_ID)
+  try {const query = `INSERT INTO MN02_USER_RECEIPT (USER_ID, RECEIPT_ID)
         VALUES (:userId, :receiptId)`;
   await con.execute(query, [userId, receiptId], { autoCommit: true });
 
@@ -15,7 +15,10 @@ exports.mapReceiptToUser = async (userId, receiptId) => {
         SELECT USER_ID, RECEIPT_ID FROM MN02_USER_RECEIPT`,
     [],
     { outFormat: oracledb.OUT_FORMAT_OBJECT }
-  );
+  );} catch (err) {
+    console.log(`Map Receipt to User failed: ${err}`)
+    return;
+  }
 
   await con.close();
   return res.rows[0];

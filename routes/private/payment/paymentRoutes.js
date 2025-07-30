@@ -6,6 +6,6 @@ const paymentController = require("../../../controllers/payment");
 const ROUTE = require('./routes') 
 
 router.post(ROUTE.GET_PAYMENT_PARAMS, paymentController.getPaymentParams)
-router.get('/success/:receiptId', paymentController.notifyPayment)
+router.post(ROUTE.UPDATE_SUCCESSFUL_PAYMENT, paymentController.notifyPayment)
 
 module.exports = router;
