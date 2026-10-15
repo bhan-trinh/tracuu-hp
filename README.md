@@ -15,7 +15,7 @@ request. A Token can be acquired from the Login view above.
 
 ### VNPT Money related
 
-Each endpoint fetches from another partner API and displays information related to the Receipts (currently in test environment):
+Each endpoint fetches from another partner API and displays information related to the Receipts:
 
 * [Look Up Receipt](user/get.md) : `GET /vnptApi/look-up`
 * [Look Up Receipt & Write To Database](user/put.md) : `GET /vnptApi/look-up-write`
