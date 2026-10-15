@@ -18,7 +18,7 @@ request. A Token can be acquired from the Login view above.
 Each endpoint fetches from another partner API and displays information related to the Receipts:
 
 * [Look Up Receipt](user/get.md) : `GET /vnptApi/look-up/[service-type]`
-* [Look Up Receipt & Write To Database](user/put.md) : `GET /vnptApi/look-up-write[service-type]`
+* [Look Up Receipt & Write To Database](user/put.md) : `GET /vnptApi/look-up-write/[service-type]`
 
 Reference `service-type` from the company's list of external tuition services API.
 
