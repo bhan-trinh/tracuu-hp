@@ -40,7 +40,7 @@ exports.notifyPayment = async (req, res) => {
 }
 
 exports.webhook = async (req, res) => {
-  const endpointSecret = "whsec_ff7796dee5b240934429fb5e1f3a18e59677352cfdbc98797488b4ba0923b88a"
+  const endpointSecret = process.env.STRIPE_SECRET_WEBHOOK
   const event = req.body;
   if (endpointSecret) {
     // Get the signature sent by Stripe
